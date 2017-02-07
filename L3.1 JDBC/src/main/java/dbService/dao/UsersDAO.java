@@ -28,19 +28,26 @@ public class UsersDAO {
         });
     }
 
+    public String getUserName(String name) throws SQLException {
+        return executor.execQuery("select * from users where login='" + name + "'", result ->{
+            result.next();
+            return result.getString(2);
+        });
+    }
+
     public long getUserId(String name) throws SQLException {
-        return executor.execQuery("select * from users where user_name='" + name + "'", result -> {
+        return executor.execQuery("select * from users where login='" + name + "'", result -> {
             result.next();
             return result.getLong(1);
         });
     }
 
-    public void insertUser(String name) throws SQLException {
-        executor.execUpdate("insert into users (user_name) values ('" + name + "')");
+    public void insertUser(String name, String password) throws SQLException {
+        executor.execUpdate("insert into users (login, password) values ('" + name + "','" + password + "')");
     }
 
     public void createTable() throws SQLException {
-        executor.execUpdate("create table if not exists users (id bigint auto_increment, user_name varchar(256), primary key (id))");
+        executor.execUpdate("create table if not exists users (id bigint auto_increment, login varchar(256), password varchar(256), primary key (id))");
     }
 
     public void dropTable() throws SQLException {
